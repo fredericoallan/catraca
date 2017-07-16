@@ -189,13 +189,13 @@ function buscarPonto(comp, mat, s, m, a, d, callback) {
                             }
                         }
                         //celular recebe uma string separada por virgula pra fazer split
-                        var retorno = funcionario + ';' + batidasDia + ';' +  horaExtra + ';' +  horaAtraso
+                        var retorno = funcionario + ';' + batidasDia + ';' +  horaExtra + ';' +  horaAtraso;
 
                         //retornar (nao tive erro, array com os valores)
                         return callback(null, retorno);
                     }else {
                         //celular recebe uma string separada por virgula pra fazer split somente com o nome do funcionario
-                        var retorno = funcionario + ';' + null + ';' +  null + ';' +  null
+                        var retorno = funcionario + ';' + ';' + ';';
                         console.log(':[ALERTA] nenhuma batida encontrada para: ' + funcionario);
                         //retornar (nao tive erro, array vazio)
                         return callback(null, retorno);
