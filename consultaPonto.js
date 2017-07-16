@@ -140,88 +140,68 @@ function buscarPonto(comp, mat, s, m, a, d, callback) {
         }
         
         try {
-
-            //se o body retornou valores
-            if (body.length != 0){
-                //recuperar o nome do funcionario correto
-                var funcionario = body.funcionario.nome;
-                //capturar o json dos dados do dia escolhido
-                var diaPonto = body.dias[a + '-' + m + '-' + d];
-                var batidasDia = '';
-                var hora = '';
-                //existem batidas?
-                if (diaPonto.batidas.length > 0){
-                    //fazer um for pra pegar os dados das batidas e retornar da forma que ja fiz no app, formatando a hora como 00:00
-                    for (i in diaPonto.batidas) {
-                        hora = diaPonto.batidas[i].hora;
-                        var horaFormatada = (hora.trim() != '' && hora !=undefined) ? (hora.substring(0, 2) + ':' + hora.substring(4, 2)) : hora;
-                        batidasDia = batidasDia + '|' + horaFormatada;
-                    }
-
-                    //inserir o ultimo |
-                    batidasDia = batidasDia + '|';
-                    var horaTrabalhada =  '';
-                    var horaExpediente = '';
-                    var horaAtraso = '';
-                    var horaExtra = '';
-
-                    //capturar hora extra com a função de retornar valor caso nao tenha condiçoes invalidas
-                    if(diaPonto.resultado.length > 0){
-                        for(i in diaPonto.resultado){
-                            switch(diaPonto.resultado[i].tipo) {
-                                case 'Horas Trabalhadas':
-                                    horaTrabalhada = (diaPonto.resultado[i].valor.trim() != '' && diaPonto.resultado[i].valor !=undefined) ? (diaPonto.resultado[i].valor.substring(0, 2) + ':' + diaPonto.resultado[i].valor.substring(4, 2)) : diaPonto.resultado[i].valor;
-                                    break;
-                                case 'Expediente':
-                                    horaExpediente = (diaPonto.resultado[i].valor.trim() != '' && diaPonto.resultado[i].valor !=undefined) ? (diaPonto.resultado[i].valor.substring(0, 2) + ':' + diaPonto.resultado[i].valor.substring(4, 2)) : diaPonto.resultado[i].valor;
-                                    break;
-                                case 'ATRASO':
-                                    horaAtraso = (diaPonto.resultado[i].valor.trim() != '' && diaPonto.resultado[i].valor !=undefined) ? (diaPonto.resultado[i].valor.substring(0, 3) + ':' + diaPonto.resultado[i].valor.substring(4, 2)) : diaPonto.resultado[i].valor;
-                                    break;
-                                case 'Extra':
-                                    horaExtra = (diaPonto.resultado[i].valor.trim() != '' && diaPonto.resultado[i].valor !=undefined) ? (diaPonto.resultado[i].valor.substring(0, 2) + ':' + diaPonto.resultado[i].valor.substring(4, 2)) : diaPonto.resultado[i].valor;
-                                    break;
-                            }
-                        }
-                    }
-                    //celular recebe uma string separada por virgula pra fazer split
-                    var retorno = funcionario + ';' + batidasDia + ';' +  horaExtra + ';' +  horaAtraso
-
-                    //retornar (nao tive erro, array com os valores)
-                    return callback(null, retorno);
-                }else {
-                    console.log(':[ALERTA] nenhuma batida encontrada');
-                    //retornar (nao tive erro, array vazio)
-                    return callback(null, []);
-                }
-
-
-            }
-
-            if (body.error == 'empty_required_data') {
+            //o retorno nao trouxe nenhum dado, nem o nome do funcionário?
+            if (body.error == 'empty_required_data' || body.error == 'not_found') {
                 console.log(':[ALERTA] nenhum resultado com estes parametros: ', body.error);
                 return callback(body.error);
-            }else {
+            }else{
+                //recuperar o nome do funcionario correto
+                var funcionario = body.funcionario.nome;
+                //se o body retornou valores
+                if (body.length != 0){
+                    //capturar o json dos dados do dia escolhido
+                    var diaPonto = body.dias[a + '-' + m + '-' + d];
+                    var batidasDia = '';
+                    var hora = '';
+                    //existem batidas?
+                    if (diaPonto.batidas.length > 0){
+                        //fazer um for pra pegar os dados das batidas e retornar da forma que ja fiz no app, formatando a hora como 00:00
+                        for (i in diaPonto.batidas) {
+                            hora = diaPonto.batidas[i].hora;
+                            var horaFormatada = (hora.trim() != '' && hora !=undefined) ? (hora.substring(0, 2) + ':' + hora.substring(4, 2)) : hora;
+                            batidasDia = batidasDia + '|' + horaFormatada;
+                        }
 
-                var ret = JSON.parse(body);
+                        //inserir o ultimo |
+                        batidasDia = batidasDia + '|';
+                        var horaTrabalhada =  '';
+                        var horaExpediente = '';
+                        var horaAtraso = '';
+                        var horaExtra = '';
 
-                if (ret && ret['aaData'] && ret['aaData'] != undefined && ret['aaData'].length > 0) {
-                    ret = ret['aaData'].map(function(ele) {
-                        return {
-                            'catraca': ele[2],
-                            'sentido': ele[3],
-                            'horario': ele[4].substr(ele[4].length - 6, 2) + ':' + ele[4].substr(ele[4].length - 4, 2),
-                            'data': ele[4]
-                        };
-                    }).reverse();
-                } else {
-                    ret = [];
+                        //capturar hora extra com a função de retornar valor caso nao tenha condiçoes invalidas
+                        if(diaPonto.resultado.length > 0){
+                            for(i in diaPonto.resultado){
+                                switch(diaPonto.resultado[i].tipo) {
+                                    case 'Horas Trabalhadas':
+                                        horaTrabalhada = (diaPonto.resultado[i].valor.trim() != '' && diaPonto.resultado[i].valor !=undefined) ? (diaPonto.resultado[i].valor.substring(0, 2) + ':' + diaPonto.resultado[i].valor.substring(4, 2)) : diaPonto.resultado[i].valor;
+                                        break;
+                                    case 'Expediente':
+                                        horaExpediente = (diaPonto.resultado[i].valor.trim() != '' && diaPonto.resultado[i].valor !=undefined) ? (diaPonto.resultado[i].valor.substring(0, 2) + ':' + diaPonto.resultado[i].valor.substring(4, 2)) : diaPonto.resultado[i].valor;
+                                        break;
+                                    case 'ATRASO':
+                                        horaAtraso = (diaPonto.resultado[i].valor.trim() != '' && diaPonto.resultado[i].valor !=undefined) ? (diaPonto.resultado[i].valor.substring(0, 3) + ':' + diaPonto.resultado[i].valor.substring(4, 2)) : diaPonto.resultado[i].valor;
+                                        break;
+                                    case 'Extra':
+                                        horaExtra = (diaPonto.resultado[i].valor.trim() != '' && diaPonto.resultado[i].valor !=undefined) ? (diaPonto.resultado[i].valor.substring(0, 2) + ':' + diaPonto.resultado[i].valor.substring(4, 2)) : diaPonto.resultado[i].valor;
+                                        break;
+                                }
+                            }
+                        }
+                        //celular recebe uma string separada por virgula pra fazer split
+                        var retorno = funcionario + ';' + batidasDia + ';' +  horaExtra + ';' +  horaAtraso
+
+                        //retornar (nao tive erro, array com os valores)
+                        return callback(null, retorno);
+                    }else {
+                        //celular recebe uma string separada por virgula pra fazer split somente com o nome do funcionario
+                        var retorno = funcionario + ';' + null + ';' +  null + ';' +  null
+                        console.log(':[ALERTA] nenhuma batida encontrada para: ' + funcionario);
+                        //retornar (nao tive erro, array vazio)
+                        return callback(null, retorno);
+                    }
                 }
             }
-
-            //console.log(ret);
-
-            return callback(null, ret);
 
         } catch (err) {
             console.log(':[ERROR] Erro ao converter a resposta ou sem dados de ponto: ', err);
