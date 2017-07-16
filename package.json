@@ -1,0 +1,20 @@
+{
+  "name": "catraca",
+  "version": "1.0.0",
+  "description": "Ferramenta para consultar e notificar acessos do sistema Ahgora.",
+  "main": "rotas.js",
+  "scripts": {
+    "test": "exit 0"
+  },
+  "author": "Frederico Allan de Souza / Tarcisio A. Magalhaes Junior",
+  "license": "ISC",
+  "dependencies": {
+    "addressparser": "^1.0.1",
+    "async": "^2.1.2",
+    "express": "^3.21.2",
+    "imap": "^0.8.18",
+    "imap-simple": "^3.0.0",
+    "nodemailer": "^4.0.1",
+    "request": "^2.78.0"
+  }
+}

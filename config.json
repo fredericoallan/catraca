@@ -1,0 +1,8 @@
+{
+    "porta"     : 3003,
+    "dns"       : "localhost",
+    "versao"    : "v1.0.0",
+    "ano"       : "2017",
+    "autor"     : "Frederico Allan de Souza",
+    "bindIP"    : "0.0.0.0"
+}
