@@ -1,6 +1,9 @@
 //minhas bibliotecas
 var express         = require('express');
 var app             = express();
+var compression	    = require('compression');
+//comprimir dados trafegados
+app.use(compression());	
 
 //arquivos de configuracoes e funcoes
 var config          = require('./config.json');

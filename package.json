@@ -11,6 +11,7 @@
   "dependencies": {
     "addressparser": "^1.0.1",
     "async": "^2.1.2",
+    "compression": "^1.7.0",
     "express": "^3.21.2",
     "imap": "^0.8.18",
     "imap-simple": "^3.0.0",
