@@ -205,7 +205,7 @@ function buscarPonto(comp, mat, s, m, a, d, callback) {
 
         } catch (err) {
             console.log('..[ERROR] Erro ao converter a resposta ou sem dados de ponto: ', err);
-            return callback(err, ret);
+            return callback(err, null);
         }
     })
 }
