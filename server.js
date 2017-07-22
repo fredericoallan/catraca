@@ -2,16 +2,33 @@
 var express         = require('express');
 var app             = express();
 var compression	    = require('compression');
-//comprimir dados trafegados
-app.use(compression());	
+
 
 //arquivos de configuracoes e funcoes
 var config          = require('./config.json');
 var consulCatr      = require('./consultaCatraca');
 var consulPont      = require('./consultaPonto');
+var loginPont       = require('./loginPonto');
 
 
 //INICIO DO MAPEAMENTO DE ROTAS --------
+
+
+/*
+Rota para /loginPonto
+Objetivo: Validar se os parametros estao corretos e utilizar um serviço rest do ahgora que retorna
+os dados iniciais do colaborador , independente se tem batidas ou nao
+utilizando o serviço https://www.ahgora.com.br/externo/getApuracao
+*/
+app.get('/loginPonto', function (req, res) {
+  
+  console.log('1)Acessando loginPonto');
+
+  //chamar o arquivo consultaPonto.js na função de export consultaC
+  loginPont.loginP(req, res, function(retorno){
+    return res.send(retorno);
+  });
+})
 
 /*
 Rota para /consultaPonto
@@ -20,7 +37,7 @@ os dados de batidas do dia (conforme data passada) do colaborador
 */
 app.get('/consultaPonto', function (req, res) {
   
-  console.log(':Acessando consultaPonto');
+  console.log('2)Acessando consultaPonto');
 
   //chamar o arquivo consultaPonto.js na função de export consultaC
   consulPont.consultaP(req, res, function(retorno){
@@ -38,7 +55,7 @@ dados de catraca do colaborador. retornar em formato de json o resultado da cons
 */
 app.get('/consultaCatraca', function (req, res) {
   
-  console.log(':Acessando consultaCatraca');
+  console.log('3)Acessando consultaCatraca');
   
   //chamar o arquivo consultaCatraca.js na função de export consultaCatraca
   consulCatr.consultaC(req, res, function(retorno){
@@ -56,7 +73,7 @@ Esta função precisa ficar abaixo das funcões acima. Desta forma ele executa a
 acima não foram requisitadas
 */
 app.get('*', function (req, res) {
-  console.log(':O IP [' + req.ip + '] tentou acessar a rota desconhecida: [' + req.params + ']');
+  console.log('4)O IP [' + req.ip + '] tentou acessar a rota desconhecida: [' + req.params + ']');
   return res.send(JSON.stringify({'msg':'rota desconhecida','success':false}, null, '\t'));
 })
 
@@ -70,6 +87,9 @@ var server = app.listen(config.porta, config.bindIP, function () {
     //variaveis do server
     var host = server.address().address;
     var port = server.address().port;
+
+    //comprimir dados trafegados
+    app.use(compression());	
 
     //habilitar trust para que funcione req.ip: capturar ips que estao acessando
     app.enable('trust proxy');

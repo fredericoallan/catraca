@@ -11,7 +11,7 @@ Funcao que valida os parametros passados na rota
 */
 function validaParametros (req, res, query, callBackConsulta) {
 
-    console.log(':consultaPonto.validaParametros');
+    console.log('..consultaPonto.validaParametros');
 
     //verificar se passou todos os parametros necessários (usuario, senha, termo, dta)
     //@company      : id que o agora cadastrou a softbox (hadcode)
@@ -27,7 +27,7 @@ function validaParametros (req, res, query, callBackConsulta) {
 
     //passou parametros vazios?
     if (req.query === {}) {
-        console.log('Parametros invalidos');
+        console.log('..Parametros invalidos');
         return callBackConsulta(JSON.stringify({'msg':'Parametros Invalidos','parametros':query,'success':false}));  
     }
 
@@ -42,7 +42,7 @@ function validaParametros (req, res, query, callBackConsulta) {
 
     //passou 6 parametros pelo menos?
     if (chavesIguais.length != 6) {
-        console.log('Parametros incorretos');
+        console.log('..Parametros incorretos');
         return callBackConsulta(JSON.stringify({'msg':'Parametros com qtd e ordem incorretos','parametros':query,'esperado':jsonCorreto,'success':false}));
     }
 
@@ -59,7 +59,7 @@ function validaParametros (req, res, query, callBackConsulta) {
     //no retorno acima, filter retorna um array em valoresVazios que são diferentes de vazio
     //obrigatoriamente deve retornar 6 valores
     if (valoresVazios.length > 0) {
-        console.log('Alguns parametros vazios');
+        console.log('..Alguns parametros vazios');
         return callBackConsulta(JSON.stringify({'msg':'Alguns parametros vazios','parametros':valoresVazios,'success':false}));
     }
     
@@ -71,7 +71,7 @@ function validaParametros (req, res, query, callBackConsulta) {
     var re = /1[0-2]|0[1-9]/;
     const validaMes = query['mes'].toString().replace(re, '');
     if (validaMes != '') {
-        console.log('Mes sem o formato mm');
+        console.log('..Mes sem o formato mm');
         return callBackConsulta(JSON.stringify({'msg':'Mes sem o formato mm','parametros':query['mes'],'success':false}));
     }
 
@@ -83,7 +83,7 @@ function validaParametros (req, res, query, callBackConsulta) {
     var re = /[2-9][0-9]{3}/;
     const validaAno = query['ano'].toString().replace(re, '');
     if (validaAno != '') {
-        console.log('Ano sem o formato yyyy');
+        console.log('..Ano sem o formato yyyy');
         return callBackConsulta(JSON.stringify({'msg':'Ano sem o formato yyyy','parametros':query['ano'],'success':false}));
     }
 
@@ -95,12 +95,12 @@ function validaParametros (req, res, query, callBackConsulta) {
     var re = /0[1-9]|[12]\d|3[01]/;
     const validaDia = query['dia'].toString().replace(re, '');
     if (validaDia != '') {
-        console.log('Dia sem o formato dd');
+        console.log('..Dia sem o formato dd');
         return callBackConsulta(JSON.stringify({'msg':'Dia invalido ou sem o formato dd','parametros':query['dia'],'success':false}));
     }
 
     //caso nao tenha retornado nenhum erro nos ifs acima, executa os comandos abaixo
-    console.log('Parametros Corretos');
+    console.log('..Parametros Corretos');
     return callBackConsulta(JSON.stringify({'msg':'Parametros Corretos','parametros':query,'success':true}));
 }
 
@@ -119,7 +119,7 @@ funcao para logar no rest do ahgora
 
 */
 function buscarPonto(comp, mat, s, m, a, d, callback) {
-    console.log(':consultaPonto.buscarPonto');
+    console.log('..consultaPonto.buscarPonto');
     request.post({
         url: 'https://www.ahgora.com.br/externo/getApuracao',
         body: {
@@ -135,14 +135,14 @@ function buscarPonto(comp, mat, s, m, a, d, callback) {
         json: true
     }, function(error, response, body) {
         if (error) {
-            console.log(':[ERROR] Buscar relatorio ponto: ', error);
+            console.log('..[ERROR] Buscar relatorio ponto: ', error);
             return callback(error);
         }
         
         try {
             //o retorno nao trouxe nenhum dado, nem o nome do funcionário?
             if (body.error == 'empty_required_data' || body.error == 'not_found') {
-                console.log(':[ALERTA] nenhum resultado com estes parametros: ', body.error);
+                console.log('..[ALERTA] nenhum resultado com estes parametros: ', body.error);
                 return callback(body.error);
             }else{
                 //recuperar o nome do funcionario correto
@@ -196,7 +196,7 @@ function buscarPonto(comp, mat, s, m, a, d, callback) {
                     }else {
                         //celular recebe uma string separada por virgula pra fazer split somente com o nome do funcionario
                         var retorno = funcionario + ';' + ';' + ';';
-                        console.log(':[ALERTA] nenhuma batida encontrada para: ' + funcionario);
+                        console.log('..[ALERTA] nenhuma batida encontrada para: ' + funcionario);
                         //retornar (nao tive erro, array vazio)
                         return callback(null, retorno);
                     }
@@ -204,7 +204,7 @@ function buscarPonto(comp, mat, s, m, a, d, callback) {
             }
 
         } catch (err) {
-            console.log(':[ERROR] Erro ao converter a resposta ou sem dados de ponto: ', err);
+            console.log('..[ERROR] Erro ao converter a resposta ou sem dados de ponto: ', err);
             return callback(err, ret);
         }
     })
@@ -214,7 +214,7 @@ function buscarPonto(comp, mat, s, m, a, d, callback) {
 
 module.exports.consultaP = function consultaP (req, res, callBackConsultaP) {
 
-    console.log(':consultaPonto.consultaP');
+    console.log('..consultaPonto.consultaP');
 
     var query = url.parse(req.url,true).query;
 

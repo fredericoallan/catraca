@@ -13,7 +13,7 @@ Funcao que valida os parametros passados na rota
 */
 function validaParametros (req, res, query, callBackConsulta) {
 
-    console.log(':consultaCatraca.validaParametros');
+    console.log('..consultaCatraca.validaParametros');
 
     //verificar se passou todos os parametros necessários (usuario, senha, termo, dta)
     //@resu     : usuario do agora
@@ -27,7 +27,7 @@ function validaParametros (req, res, query, callBackConsulta) {
 
     //passou parametros vazios?
     if (req.query === {}) {
-        console.log(':Parametros invalidos');
+        console.log('..Parametros invalidos');
         return callBackConsulta(JSON.stringify({'msg':'Parametros Invalidos','parametros':query,'success':false}));  
     }
 
@@ -42,7 +42,7 @@ function validaParametros (req, res, query, callBackConsulta) {
 
     //passou 4 parametros pelo menos?
     if (chavesIguais.length != 4) {
-        console.log(':Parametros incorretos');
+        console.log('..Parametros incorretos');
         return callBackConsulta(JSON.stringify({'msg':'Parametros com qtd e ordem incorretos','parametros':query,'esperado':jsonCorreto,'success':false}));
     }
 
@@ -59,7 +59,7 @@ function validaParametros (req, res, query, callBackConsulta) {
     //no retorno acima, filter retorna um array em valoresVazios que são diferentes de vazio
     //obrigatoriamente deve retornar 4 valores
     if (valoresVazios.length > 0) {
-        console.log(':Alguns parametros vazios');
+        console.log('..Alguns parametros vazios');
         return callBackConsulta(JSON.stringify({'msg':'Alguns parametros vazios','parametros':valoresVazios,'success':false}));
     }
     
@@ -71,12 +71,12 @@ function validaParametros (req, res, query, callBackConsulta) {
     var re = /(\d){2}\/(\d){2}\/(\d){4}/;
     const validaData = query['atd'].toString().replace(re, '');
     if (validaData != '') {
-        console.log(':Data sem o formato dd/mm/yyyy');
+        console.log('..Data sem o formato dd/mm/yyyy');
         return callBackConsulta(JSON.stringify({'msg':'Data sem o formato dd/mm/yyyy','parametros':query['atd'],'success':false}));
     }
 
     //caso nao tenha retornado nenhum erro nos ifs acima, executa os comandos abaixo
-    console.log(':Parametros corretos na consulta catraca');
+    console.log('..Parametros corretos na consulta catraca');
     return callBackConsulta(JSON.stringify({'msg':'Parametros Corretos','parametros':query,'success':true}));
 }
 
@@ -86,8 +86,8 @@ funcao para logar no ahgora
 
 */
 function logar(usuario, senha, callback) {
-    console.log(':consultaCatraca.logar');
-    console.log(':Realizando login Ahgora ', usuario);
+    console.log('..consultaCatraca.logar');
+    console.log('..Realizando login Ahgora ', usuario);
     request.post({
         url: 'https://www.ahgora.com.br/usuario/login',
         form: {
@@ -105,7 +105,7 @@ function logar(usuario, senha, callback) {
             console.log(error);
             return callback(error);
         }else{
-            console.log(':Login no sistema Ahgora realizado com sucesso.');
+            console.log('..Login no sistema Ahgora realizado com sucesso.');
             return callback(null);
         }
 
@@ -122,7 +122,7 @@ callback retorna tambem a resposta captura da pagina (ret). neste caso parser do
 
 */
 function buscarRelCatraca(termo, data, callback) {
-    console.log('Consultando acessos de ', termo, ' em ',  data);
+    console.log('..Consultando acessos de ', termo, ' em ',  data);
     var url = "https://www.ahgora.com.br/acessos/monta_tabela_diaria_data?sEcho=3&iColumns=9&sColumns=%2C%2C%2C%2C%2C%2C%2C%2C&iDisplayStart=0&iDisplayLength=30&mDataProp_0=0&sSearch_0=&bRegex_0=false&bSearchable_0=false&bSortable_0=false&mDataProp_1=1&sSearch_1=&bRegex_1=false&bSearchable_1=false&bSortable_1=true&mDataProp_2=2&sSearch_2=&bRegex_2=false&bSearchable_2=false&bSortable_2=true&mDataProp_3=3&sSearch_3=&bRegex_3=false&bSearchable_3=false&bSortable_3=true&mDataProp_4=4&sSearch_4=&bRegex_4=false&bSearchable_4=false&bSortable_4=true&mDataProp_5=5&sSearch_5=&bRegex_5=false&bSearchable_5=false&bSortable_5=true&mDataProp_6=6&sSearch_6=&bRegex_6=false&bSearchable_6=false&bSortable_6=true&mDataProp_7=7&sSearch_7=&bRegex_7=false&bSearchable_7=false&bSortable_7=true&mDataProp_8=8&sSearch_8=&bRegex_8=false&bSearchable_8=false&bSortable_8=true&sSearch=" + termo + "&bRegex=false&iSortCol_0=4&sSortDir_0=desc&iSortingCols=1&situacao=&data_inicial=" + data + "&data_final=" + data + "&empresa=&documento_pessoa=&localizacao=&localizacao_rep=&centro_custo=&_=1478370309301";
 
     //console.log(url);
@@ -135,7 +135,7 @@ function buscarRelCatraca(termo, data, callback) {
         jar: jar
     }, function(error, response, body) {
         if (error) {
-            console.log(':[ERROR] Buscar relatorio catraca: ', error);
+            console.log('..[ERROR] Buscar relatorio catraca: ', error);
             return callback(error);
         }
         
@@ -160,7 +160,7 @@ function buscarRelCatraca(termo, data, callback) {
             return callback(null, ret);
 
         } catch (err) {
-            console.log(':[ERROR] Erro ao converter a resposta ou sem dados de catraca: ', body);
+            console.log('..[ERROR] Erro ao converter a resposta ou sem dados de catraca: ', body);
             return callback(err, ret);
         }
     })
@@ -170,7 +170,7 @@ function buscarRelCatraca(termo, data, callback) {
 
 module.exports.consultaC = function consultaC (req, res, callBackConsultaC) {
 
-    console.log(':consultaCatrata.consultaC');
+    console.log('..consultaCatrata.consultaC');
 
     var query = url.parse(req.url,true).query;
 
