@@ -2,7 +2,11 @@
 var express         = require('express');
 var app             = express();
 var compression	    = require('compression');
+var cors            = require('cors');
+var bodyParser      = require('body-parser')
 
+app.use(cors())
+app.use(bodyParser.json())
 
 //arquivos de configuracoes e funcoes
 var config          = require('./config.json');
@@ -38,8 +42,8 @@ Parametros:
   @ano          : ano que se deseja pesquisar o ponto
 
 */
-app.get('/loginPonto', function (req, res) {
-  
+app.post('/loginPonto', function (req, res) {
+
   console.log('1)Acessando loginPonto');
 
   //jsonCorreto contendo os parametros que devem vir das requisições
@@ -78,13 +82,13 @@ Parametros:
 
 
 */
-app.get('/consultaPonto', function (req, res) {
+app.post('/consultaPonto', function (req, res) {
 
   console.log('2)Acessando consultaPonto');
 
   //jsonCorreto contendo os parametros que devem vir das requisições
   jsonCorreto = {'company':'','matricula':'','senha':'','mes':'','ano':'', 'dia':''};
-  
+
   //chamar o arquivo consultaPonto.js na função de export consultaC
   consulPont.consultaP(req, res, jsonCorreto, function(retorno){
     return res.send(retorno);
@@ -114,13 +118,13 @@ Parametros:
   @atd          : data de consulta da catraca
 
 */
-app.get('/consultaCatraca', function (req, res) {
-  
+app.post('/consultaCatraca', function (req, res) {
+
   console.log('3)Acessando consultaCatraca');
 
   //jsonCorreto contendo os parametros que devem vir das requisições
   jsonCorreto = {'resu':'','ssap':'','omret':'','atd':''};
-  
+
   //chamar o arquivo consultaCatraca.js na função de export consultaCatraca
   consulCatr.consultaC(req, res, jsonCorreto, function(retorno){
     return res.send(retorno);
@@ -161,7 +165,7 @@ var server = app.listen(config.porta, config.bindIP, function () {
     var port = server.address().port;
 
     //comprimir dados trafegados
-    app.use(compression());	
+    app.use(compression());
 
     //habilitar trust para que funcione req.ip: capturar ips que estao acessando
     app.enable('trust proxy');

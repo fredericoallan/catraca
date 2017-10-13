@@ -102,7 +102,8 @@ module.exports.consultaC = function consultaC (req, res, jsonCorreto, callBackCo
 
     console.log('..consultaCatrata.consultaC');
 
-    var query = url.parse(req.url,true).query;
+    // var query = url.parse(req.url,true).query;
+    var query = req.body;
 
     //validar se os parametros estao corretos passados na rota consultaCatrata
     validaParametros.validaParam(req, query, jsonCorreto, function(resJson) {

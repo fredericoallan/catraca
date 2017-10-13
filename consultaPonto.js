@@ -119,7 +119,8 @@ module.exports.consultaP = function consultaP (req, res, jsonCorreto, callBackCo
 
     console.log('..consultaPonto.consultaP');
 
-    var query = url.parse(req.url,true).query;
+    // var query = url.parse(req.url,true).query;
+    var query = req.body;
 
     //validar se os parametros estao corretos passados na rota consultaPonto
     validaParametros.validaParam(req, query, jsonCorreto, function(resJson) {
@@ -128,7 +129,7 @@ module.exports.consultaP = function consultaP (req, res, jsonCorreto, callBackCo
             console.log(resJson);
             return callBackConsultaP(resJson);
         }
-
+        console.log('consultando ponto', query)
         buscarPonto(query['company'], query['matricula'], query['senha'], query['mes'], query['ano'], query['dia'], function(err, ret) {
             if (err) {
                 console.log(err);

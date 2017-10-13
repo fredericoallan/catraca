@@ -50,7 +50,7 @@ function logarPonto(comp, mat, s, m, a, callback) {
                 return callback(body.error);
             }else{
                 //recuperar o nome do funcionario correto
-                var funcionario = body.funcionario.nome;
+                var funcionario = body.funcionario;
                 
                 //celular recebe uma string separada por virgula pra fazer split
                 var retorno = funcionario;
@@ -72,7 +72,7 @@ module.exports.loginP = function loginP (req, res, jsonCorreto, callBackLogarP) 
 
     console.log('..loginPonto.loginP');
 
-    var query = url.parse(req.url,true).query;
+    var query = req.body;
 
     //validar se os parametros estao corretos passados na rota logarPonto
     validaParametros.validaParam(req, query, jsonCorreto, function(resJson) {
@@ -88,8 +88,8 @@ module.exports.loginP = function loginP (req, res, jsonCorreto, callBackLogarP) 
                 return callBackLogarP(JSON.stringify({'ret':err,'msg':'usuario ou senha invalidos', 'success':false}, null, '\t'));
             }else{
                 console.log('..' + ret);
-                //return callBackLogarP(JSON.stringify(ret, null, '\t'));
-                return callBackLogarP(ret);
+                return callBackLogarP(JSON.stringify({'usuario': ret, 'msg': 'Login realizado com sucesso', 'success': true}, null, '\t'));
+                // return callBackLogarP(ret);
             }
         });
    }); 
